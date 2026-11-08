@@ -1,0 +1,44 @@
+const tr={
+ru:{top:'Тепло, которое хочется дарить · QAMQOR',navCatalog:'Каталог',navAbout:'О бренде',navContact:'Контакты',cart:'Корзина',heroEyebrow:'Коллекция шарфов',heroTitle:'Тепло<br>в каждом<br>прикосновении.',heroText:'Мягкие однотонные шарфы в лаконичных оттенках. Выбери свой цвет и добавь любимые шарфы в корзину.',heroButton:'Выбрать шарф',catalogEyebrow:'Найди свой оттенок',catalogTitle:'Карточки товаров',catalogText:'Настоящие фотографии шарфов QAMQOR. Выберите любимый оттенок.',all:'Все',light:'Светлые',dark:'Тёмные',bright:'Яркие',aboutEyebrow:'О бренде',aboutTitle:'Простота.<br>Мягкость. Забота.',aboutText:'QAMQOR — шарфы, которые становятся частью повседневного образа и тёплым подарком близким. Красота живёт в приятной фактуре, спокойных оттенках и внимании к деталям.',aboutButton:'Смотреть коллекцию',footerContact:'Вопросы и заказы',photo:'Фото скоро',views:['Спереди','Сбоку','Детали','На модели'],viewSoon:'Фото этого ракурса добавим позже',desc:'Однотонный шарф',price:'14 990 ₸',note:'Наличие и детали — по запросу',details:'Подробнее',add:'В корзину +',whatsapp:'Заказать в WhatsApp',added:'добавлен в корзину',empty:'Корзина пока пуста',modal:'Фотография товара. Состав и размер уточняйте в WhatsApp.',meta:'Цена: 14 990 ₸ · Состав и размер: уточняются',order:'Здравствуйте! Меня интересуют шарфы QAMQOR:'},
+kk:{top:'Сыйлағың келетін жылулық · QAMQOR',navCatalog:'Каталог',navAbout:'Бренд туралы',navContact:'Байланыс',cart:'Себет',heroEyebrow:'Орамалдар топтамасы',heroTitle:'Әрбір<br>жанасудағы<br>жылулық.',heroText:'Күнделікті сәніңізге ерекше үйлесім сыйлайтын жұмсақ әрі сапалы орамалдар. Әр түс — өз сұлулығымен ерекше. Өзіңізге ұнағанын таңдап, жақындарыңызға жылулық сыйла.',heroButton:'Орамалды таңдау',catalogEyebrow:'Өзіңе ұнайтын түсті таңда',catalogTitle:'Тауар карточкалары',catalogText:'QAMQOR орамалдарының шынайы фотосуреттері. Өзіңе ұнайтын түсті таңда.',all:'Барлығы',light:'Ашық түстер',dark:'Қою түстер',bright:'Қанық түстер',aboutEyebrow:'Бренд туралы',aboutTitle:'Қарапайымдық.<br>Жұмсақтық. Қамқорлық.',aboutText:'QAMQOR — күнделікті сәніңізді толықтыратын және жақындарыңызға сыйлауға болатын орамалдар. Әсемдік жағымды матадан, үйлесімді түстерден және әрбір бөлшекке деген ықыластан көрінеді.',aboutButton:'Топтаманы көру',footerContact:'Сұрақтар мен тапсырыстар',photo:'Фото кейін қосылады',views:['Алдынан','Қырынан','Бөлшектері','Модельде'],viewSoon:'Бұл ракурстың фотосын кейін қосамыз',desc:'Біртүсті орамал',price:'14 990 ₸',note:'Бар-жоғы мен мәліметі сұраныс бойынша',details:'Толығырақ',add:'Себетке қосу +',whatsapp:'WhatsApp арқылы тапсырыс беру',added:'себетке қосылды',empty:'Себет әзірге бос',modal:'Тауардың фотосуреті. Құрамы мен өлшемін WhatsApp арқылы сұраңыз.',meta:'Бағасы: 14 990 ₸ · Құрамы мен өлшемі: нақтыланады',order:'Сәлеметсіз бе! QAMQOR орамалдары қызықтырады:'}};
+const UNIT_PRICE=14990;
+const money=n=>new Intl.NumberFormat('ru-RU').format(n)+' ₸';
+let lang='ru';
+const items=[
+ ['Чёрный','Қара','dark','#171717','black.jpg'],
+ ['Шоколадный','Шоколад түсті','dark','#65432f','brown.jpg'],
+ ['Бежевый','Беж','light','#cbb99d','beige.jpg'],
+ ['Белый','Ақ','light','#f5f3ed','white.jpg'],
+ ['Красный','Қызыл','bright','#b51f2c','red.jpg'],
+ ['Голубой','Көгілдір','light','#a9cbd8','sky.jpg'],
+ ['Горчичный','Қыша түсті','bright','#c88a24','mustard.jpg'],
+ ['Серо-голубой','Сұр-көгілдір','light','#7296a7','steel.jpg'],
+ ['Песочный','Құм түсті','light','#d8c59e','sand.jpg'],
+ ['Тёмно-синий','Қою көк','dark','#152344','navy.jpg'],
+ ['Изумрудный','Изумруд түсті','bright','#087b70','emerald.jpg']
+];
+const cartKey='qamqor-cart-v2';
+let cart={};
+try {const saved=JSON.parse(localStorage.getItem(cartKey)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved)){for(const [k,v] of Object.entries(saved)){if(items.some(p=>p[0]===k)&&Number.isInteger(v)&&v>0&&v<=99)cart[k]=v}}}catch(e){}
+const nameOf=p=>p[lang==='kk'?1:0];
+const photoOf=p=>'images/'+p[4];
+function persist(){try{localStorage.setItem(cartKey,JSON.stringify(cart))}catch(e){}updateCount();renderCart()}
+function updateCount(){document.getElementById('count').textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
+function setLang(l){lang=l;document.documentElement.lang=l==='kk'?'kk':'ru';document.querySelectorAll('[data-t]').forEach(e=>e.innerHTML=tr[l][e.dataset.t]);document.getElementById('ru').classList.toggle('active',l==='ru');document.getElementById('kk').classList.toggle('active',l==='kk');render(document.querySelector('.filter.active').dataset.group);if(document.getElementById('modal').style.display==='flex'&&currentGalleryProduct){details(currentGalleryProduct[0])}renderCart()}
+function render(g='all'){let list=g==='all'?items:items.filter(x=>x[2]===g);document.getElementById('products').innerHTML=list.map(p=>{let n=nameOf(p);return `<article class="product"><div class="product-photo" onclick="details('${p[0]}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')details('${p[0]}')"><img class="product-img" src="${photoOf(p)}" alt="QAMQOR — ${n}" loading="lazy"><span class="tag">QAMQOR</span></div><div class="product-info"><div class="product-title"><h3>${n}</h3><span class="dot" style="background:${p[3]}"></span></div><p class="desc">${tr[lang].desc}</p><div class="price">${tr[lang].price}</div><div class="actions"><button class="add" onclick="add('${p[0]}')">${tr[lang].add}</button></div></div></article>`}).join('')}
+function filter(g,b){document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(g)}
+function add(n){if(!items.some(p=>p[0]===n))return;cart[n]=Math.min(99,(cart[n]||0)+1);persist();notify(nameOf(items.find(p=>p[0]===n))+' — '+tr[lang].added)}
+function quantity(n,d){if(!cart[n])return;cart[n]+=d;if(cart[n]<=0)delete cart[n];persist()}
+function removeItem(n){delete cart[n];persist()}
+function showCart(){document.getElementById('cartOverlay').classList.add('open');document.getElementById('cartPanel').classList.add('open');document.body.classList.add('cart-open');renderCart()}
+function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartPanel').classList.remove('open');document.body.classList.remove('cart-open')}
+function renderCart(){const list=Object.entries(cart);const kaz=lang==='kk';document.getElementById('cartTitle').textContent=tr[lang].cart;document.getElementById('cartItems').innerHTML=list.length?list.map(([n,qty])=>{const p=items.find(p=>p[0]===n);return `<div class="cart-item"><img src="${photoOf(p)}" alt="${nameOf(p)}"><div class="cart-item-info"><h3>${nameOf(p)}</h3><small>${money(UNIT_PRICE)} × ${qty} = ${money(UNIT_PRICE*qty)}</small><div class="qty"><button onclick="quantity('${n}',-1)" aria-label="Минус">−</button><span>${qty}</span><button onclick="quantity('${n}',1)" aria-label="Плюс">+</button></div><button class="remove" onclick="removeItem('${n}')">${kaz?'Өшіру':'Удалить'}</button></div></div>`}).join(''):`<div class="cart-empty">${kaz?'Себет әзірге бос. Топтамадан орамал таңдаңыз.':'Корзина пока пуста. Выберите шарф из коллекции.'}</div>`;const total=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById('cartSummary').textContent=kaz?`Барлығы: ${total} дана · ${money(total*UNIT_PRICE)}`:`Всего: ${total} шт. · ${money(total*UNIT_PRICE)}`;document.getElementById('cartHelp').textContent=kaz?'Тауарлар мен жалпы сома себетте сақталады.':'Товары и сумма сохраняются в корзине.'}
+let currentGalleryProduct=null,galleryIndex=0;
+function drawGallery(){const p=currentGalleryProduct;if(!p)return;const img=document.getElementById('galleryImage');img.src=photoOf(p);img.alt='QAMQOR — '+nameOf(p);document.getElementById('galleryThumbs').innerHTML=`<button class="gallery-thumb active" type="button">${lang==='kk'?'Тауар фотосы':'Фото товара'}</button>`;document.querySelectorAll('.gallery-arrow').forEach(e=>e.style.display='none')}
+function selectView(i){galleryIndex=0;drawGallery()}
+function changeView(d){drawGallery()}
+function details(n){currentGalleryProduct=items.find(x=>x[0]===n);if(!currentGalleryProduct)return;document.getElementById('modalTitle').textContent=nameOf(currentGalleryProduct);document.getElementById('modalText').textContent=tr[lang].modal;document.getElementById('modalMeta').textContent=tr[lang].price;document.getElementById('modalAdd').textContent=tr[lang].add;drawGallery();document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function notify(s){let e=document.getElementById('toast');e.textContent=s;e.style.display='block';clearTimeout(window.tm);window.tm=setTimeout(()=>e.style.display='none',3000)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeModal()}});
+updateCount();render();renderCart();
